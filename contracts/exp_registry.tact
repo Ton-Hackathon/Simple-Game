@@ -15,6 +15,10 @@ message IncreaseExp{
 contract ExpRegistry with Deployable {
     // The Registry mapping that store all the user data
     registryMap: map<Address, Player>;
+
+    // ERROR CODES
+    const NOT_FOUND: Int = 15;
+
     // Init
     init(){
         self.registryMap = emptyMap();
@@ -45,12 +49,14 @@ contract ExpRegistry with Deployable {
                 currentPlayer.expCaps+=100;
                 currentPlayer.currentProgress = tempValue - expCaps;
                 self.registryMap.set(msg.address, currentPlayer);
+                self.notify("Exp Increased".asComment());
             }else{
                 currentPlayer.currentProgress = tempValue;
                 self.registryMap.set(msg.address, currentPlayer);
+                self.notify("Exp Increased".asComment());
             }
+        }else{
+            dump(self.NOT_FOUND);
         }
-
-        self.notify("Exp Increased".asComment());
     }
 }   
